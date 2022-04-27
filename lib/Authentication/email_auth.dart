@@ -7,32 +7,49 @@ class EmailPasswordAuth{
 
   final _auth = FirebaseAuth.instance ;
 
+  _showSnackBar(String errorName , BuildContext context){
+    return ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(errorName)));
+  }
+
+
   // Sign In With Email and Password
-  signInWithEmail(BuildContext context,String email , String pass) async{
+  void signInWithEmail(BuildContext context,String email , String pass) async{
 
     if(_auth.currentUser == null){
       try {
-        UserCredential user = await _auth.signInWithEmailAndPassword(email: email, password: pass);
-        if(user != null){
-          // Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>HomePage(userCredential: user)), (route) => false);
+        UserCredential userCredential = await _auth.signInWithEmailAndPassword(email: email, password: pass);
+        if(userCredential != null){
+          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>HomePage(user: userCredential.user)), (route) => false);
         }
       } catch (e) {
-        print(e) ; 
+        FocusScope.of(context).unfocus();
+        if(e.toString().contains("user-not-found")){
+          _showSnackBar("No user Exist", context) ;
+        }else if(e.toString().contains("invalid-password") || e.toString().contains("invalid-email")){
+          _showSnackBar("Invalid Credentials", context) ;
+        }else{
+          _showSnackBar(e.toString(), context);
+        }
       }
     }
   }
 
 
   // Sign Up With Email and Password 
-  signUpEmail(BuildContext context , String email , String pass)async{
+  void signUpEmail(BuildContext context , String email , String pass)async{
     
     try {
       UserCredential userCredential = await _auth.createUserWithEmailAndPassword(email: email, password: pass) ;
       if(userCredential != null){
-        // Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>HomePage(userCredential: userCredential)), (route) => false) ;
+        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>HomePage(user: userCredential.user,)), (route) => false) ;
       }
     } catch (e) {
-      print(e) ;
+      FocusScope.of(context).unfocus();
+      if(e.toString().contains("already-exist")){
+          _showSnackBar("User Already Exist", context) ;
+        }else{
+          _showSnackBar(e.toString(), context);
+        }
     }
   }
 

@@ -1,5 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:todo_firebase/Authentication/email_auth.dart';
 // import 'package:todo_firebase/Authentication/email_auth.dart';
 import 'package:todo_firebase/Authentication_Scr/login.dart';
 
@@ -9,6 +11,7 @@ class SignUpPage extends StatelessWidget {
   final TextEditingController _email = TextEditingController() ;
   final TextEditingController _pass = TextEditingController();
   final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
+  final _auth = FirebaseAuth.instance ;
 
   @override
   Widget build(BuildContext context) {
@@ -70,8 +73,13 @@ class SignUpPage extends StatelessWidget {
                       child: ElevatedButton(
                         onPressed: (){
                           if(_formkey.currentState!.validate()){
-                            // EmailPasswordAuth().signUpEmail(context, _email.toString(), _pass.toString());
-                            print("signUp");
+                            
+                            if(_auth.currentUser == null){
+                              EmailPasswordAuth().signUpEmail(context , _email.text , _pass.text);
+                              print("signUp");
+                            }
+
+                              print(_email.text) ;
                           
                           }
                         },
