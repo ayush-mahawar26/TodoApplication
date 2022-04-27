@@ -2,6 +2,9 @@ import 'package:device_preview/device_preview.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:todo_firebase/Authentication/email_auth.dart';
+import 'package:todo_firebase/wrapper.dart';
 
 import 'Authentication_Scr/login.dart';
 
@@ -20,8 +23,12 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: LoginPage(),
+    return StreamProvider.value(
+      initialData: null,
+      value: EmailPasswordAuth().getUserStatus,
+      child: const MaterialApp(
+        home: Wrapper(),
+      ),
     );
   }
 }

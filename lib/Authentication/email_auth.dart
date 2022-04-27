@@ -11,6 +11,10 @@ class EmailPasswordAuth{
     return ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(errorName)));
   }
 
+  Stream<User?> get getUserStatus{
+    return _auth.authStateChanges().map((event) => _auth.currentUser) ;
+  }
+
 
   // Sign In With Email and Password
   void signInWithEmail(BuildContext context,String email , String pass) async{
