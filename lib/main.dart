@@ -26,7 +26,10 @@ class MyApp extends StatelessWidget {
     return StreamProvider.value(
       initialData: null,
       value: EmailPasswordAuth().getUserStatus,
-      child: const MaterialApp(
+      child:  MaterialApp(
+        theme: ThemeData(
+          primarySwatch: Colors.teal 
+        ),
         home: Wrapper(),
       ),
     );
